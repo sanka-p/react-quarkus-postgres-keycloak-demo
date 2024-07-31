@@ -84,12 +84,13 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public Response<?> updateUser(Long id, UserDTO userDTO) {
         // Check for unique constraint violations
-        if (userRepository.count("phoneNumber", userDTO.getPhoneNumber()) > 0){
-            Response<String> response = new ErrorResponse();
-            response.setStatusCode(StatusCode.CONFLICT);
-            response.setBody("Record with phone number already exists");
-            return response;
-        }
+        // TODO: This cant be handled like this
+        // if (userRepository.count("phoneNumber", userDTO.getPhoneNumber()) > 1){ // Since the previous phone number already exist
+        //     Response<String> response = new ErrorResponse();
+        //     response.setStatusCode(StatusCode.CONFLICT);
+        //     response.setBody("Record with phone number already exists");
+        //     return response;
+        // }
 
         // Check if record exist to update
         if (userRepository.findById(id) == null){
@@ -99,7 +100,14 @@ public class UserServiceImpl implements UserService {
             return response;
         }
 
-        userRepository.persist(mapUser(userDTO));
+        User user = userRepository.findById(id);
+        user.setFirstName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());
+        user.setEmail(userDTO.getEmail());
+        if (userDTO.getPassword() != null) user.setPassword(userDTO.getPassword());
+        user.setPhoneNumber(userDTO.getPhoneNumber());
+        user.setDateOfBirth(userDTO.getDateOfBirth());
+        userRepository.persist(user);
 
         Response<UserDTO> response = new SuccessResponse<>();
         response.setStatusCode(StatusCode.ACCEPTED);

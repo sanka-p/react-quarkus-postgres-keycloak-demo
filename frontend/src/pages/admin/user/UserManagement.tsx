@@ -3,7 +3,8 @@ import { AxiosResponse } from "axios";
 import { User } from "../../../types/admin/user/UserTypes"
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import useHasRole from "../../../hooks/useHasRole";
+import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import Spinner from "react-bootstrap/Spinner";
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
@@ -13,7 +14,11 @@ import Col from 'react-bootstrap/Col';
 const USER_URL = "/users"
 
 const UserManagement = () => {
-    const [users, setUsers] = useState<User[] | null>([]);
+    const axiosPrivate = useAxiosPrivate();
+
+    const hasRole = useHasRole("manager");
+
+    const [users, setUsers] = useState<User[]>([]);
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -22,7 +27,7 @@ const UserManagement = () => {
     const fetchUsers = async () => {
         try {
             setIsLoading(true);
-            const response: AxiosResponse = await client.get(USER_URL);
+            const response: AxiosResponse = await axiosPrivate.get(USER_URL);
             setUsers(response.data)             
         } catch(err) {
             console.log(err);
@@ -35,7 +40,10 @@ const UserManagement = () => {
     // Load user list at mount
     useEffect(()=>{fetchUsers()}, []);
 
-    const handleClick = (e) => {console.log(e)}
+    const handleClick = (userId:number | undefined) => {
+      if (userId == undefined) return;
+      navigate(`./${userId}`);
+    };
 
     const navigate = useNavigate(); 
     const routeChange = () =>{ 
@@ -51,6 +59,9 @@ const UserManagement = () => {
       <div>Something went wrong</div>
     );
 
+    if (!hasRole)
+      return <div>Unauthorized</div>
+
     return (
         <>
           <Container>
@@ -65,7 +76,7 @@ const UserManagement = () => {
             <Col>DoB</Col>
           </Row>
           {users?.map((user, index) => (
-              <Row onClick={handleClick}>
+              <Row onClick={() => handleClick(user.id)}>
                 <Col key={index}>{user.firstName}</Col>
                 <Col key={index}>{user.lastName}</Col>
                 <Col key={index}>{user.email}</Col>

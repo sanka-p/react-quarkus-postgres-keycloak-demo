@@ -1,5 +1,6 @@
 package org.demo.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.GET;
@@ -20,8 +21,8 @@ import org.jboss.resteasy.reactive.RestResponse;
 
 import io.quarkus.security.Authenticated;
 
-//@Authenticated // TODO
-//@SecurityRequirement(name = "Keycloak") // TODO
+@Authenticated
+@SecurityRequirement(name = "Keycloak")
 @Path("/users")
 public class UserController {
     @Inject
@@ -36,11 +37,10 @@ public class UserController {
      * @return A RestResponse containing the status code and body of the HTTP response.
      *         The body contains the list of users or the error message
      */
+    @RolesAllowed("manager")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public RestResponse<?> getAllUsers(){
-        System.out.println("I was triggered");
-
         Response<?> response = userService.getAllUsers();
 
         return RestResponse.ResponseBuilder.create(response.getStatusCode())

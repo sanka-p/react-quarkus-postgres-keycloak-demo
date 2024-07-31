@@ -1,5 +1,6 @@
 import { Fragment } from "react";
-
+import { doLogout } from "../../auth/keycloak";
+import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -21,6 +22,7 @@ function NavBar() {
                                 </NavDropdown>
                             </Nav>
                         </Navbar.Collapse>
+                        <Button onClick={()=>{doLogout()}}>Logout</Button>
                     </Container>
                 </Navbar>
         </Fragment>
