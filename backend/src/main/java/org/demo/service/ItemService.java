@@ -15,6 +15,14 @@ public interface ItemService {
     public Response<?> getAllItems();
 
     /**
+     * Retrieve item by id.
+     *
+     * @return A Response object containing the HTTP status code and body.
+     *         The body includes the item.
+     */
+    public ItemDTO getItem(Long id);
+
+    /**
      * Persists a new item.
      *
      * @param itemDTO The ItemDTO object containing the item information to be saved.

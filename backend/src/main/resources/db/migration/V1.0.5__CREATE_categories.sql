@@ -1,0 +1,7 @@
+CREATE TABLE categories
+(
+  id      BIGINT NOT NULL PRIMARY KEY,
+  tag_name    VARCHAR(50)
+);
+
+CREATE SEQUENCE cat_seq START WITH 100 INCREMENT BY 50;

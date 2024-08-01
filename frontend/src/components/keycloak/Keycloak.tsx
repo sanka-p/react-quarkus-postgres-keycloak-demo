@@ -18,7 +18,7 @@ export function KeycloakWrapper()  {
 
     const onErrorCallback = (err: unknown) => {
         console.error(err);
-        <Crash />
+        return <Crash />
     }
 
     // Initialize keycloak at mount
