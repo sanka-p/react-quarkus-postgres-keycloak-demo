@@ -44,12 +44,14 @@ public class CategoryEvent {
                             response.setBody(categoryDTOS);
                             return response;
                         })
-//                        .onFailure().recoverWithItem(throwable -> {
-//                            Response<String> response = new ErrorResponse();
-//                            response.setStatusCode(RestResponse.StatusCode.INTERNAL_SERVER_ERROR);
-//                            response.setBody("Something went wrong");
-//                            return response;
-//                        })
+                        .onFailure().recoverWithItem(throwable -> {
+                            Response<String> response = new ErrorResponse();
+                            response.setStatusCode(RestResponse.StatusCode.INTERNAL_SERVER_ERROR);
+                            response.setBody("Something went wrong");
+                            return response;
+                        })
         );
+
+
     }
 }
