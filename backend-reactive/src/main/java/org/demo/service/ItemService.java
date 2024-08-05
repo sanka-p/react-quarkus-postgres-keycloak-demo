@@ -6,7 +6,7 @@ import org.demo.response.Response;
 import io.smallrye.mutiny.Uni;
 
 public interface ItemService {
-    Uni<Response<?>> getAllItems();
+//    Uni<Response<?>> getAllItems();
 
-    Uni<Response<?>> saveItem(ItemDTO itemDTO);
+//    Uni<Response<?>> saveItem(ItemDTO itemDTO);
 }

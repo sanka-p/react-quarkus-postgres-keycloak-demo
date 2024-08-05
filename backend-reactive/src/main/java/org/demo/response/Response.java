@@ -1,13 +1,25 @@
 package org.demo.response;
 
+import io.vertx.core.json.JsonObject;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
 @Getter
 @Setter
-public class Response<T> {
+public class Response {
     private int statusCode;
-    private T body;
+    private JsonObject payload;
+
+    private Response(int statusCode, JsonObject payload){
+        this.statusCode = statusCode;
+        this.payload = payload;
+    }
+
+    public static Response successResponse(int successCode, Object payload){
+        return new Response(successCode, JsonObject.mapFrom(payload));
+    }
+
+    public static Response errorResponse(int errorCode, String payload){
+        return new Response(errorCode, JsonObject.mapFrom(payload));
+    }
 }

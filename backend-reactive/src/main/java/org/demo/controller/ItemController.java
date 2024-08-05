@@ -34,17 +34,17 @@ public class ItemController {
      *         The body contains the list of items or the error message
      */
     //@RolesAllowed({"customer", "manager", "employee"})
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Uni<RestResponse<?>> getAllItems(){
-        return itemService.getAllItems().onItem().transform(
-                response -> {
-                    return RestResponse.ResponseBuilder.create(response.getStatusCode())
-                            .entity(response.getBody())
-                            .build();
-                }
-        );
-    }
+//    @GET
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Uni<RestResponse<?>> getAllItems(){
+//        return itemService.getAllItems().onItem().transform(
+//                response -> {
+//                    return RestResponse.ResponseBuilder.create(response.getStatusCode())
+//                            .entity(response.getBody())
+//                            .build();
+//                }
+//        );
+//    }
 
     /**
      * Saves an item.
@@ -54,15 +54,15 @@ public class ItemController {
      *         The body contains the newly saved item details or the error message
      */
     //@RolesAllowed({"manager"})
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    public Uni<RestResponse<?>> saveItem(ItemDTO itemDTO){
-        return itemService.saveItem(itemDTO).onItem().transform(
-                response -> {
-                    return RestResponse.ResponseBuilder.create(response.getStatusCode())
-                            .entity(response.getBody())
-                            .build();
-                }
-        );
-    }
+//    @POST
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Uni<RestResponse<?>> saveItem(ItemDTO itemDTO){
+//        return itemService.saveItem(itemDTO).onItem().transform(
+//                response -> {
+//                    return RestResponse.ResponseBuilder.create(response.getStatusCode())
+//                            .entity(response.getBody())
+//                            .build();
+//                }
+//        );
+//    }
 }
