@@ -36,49 +36,49 @@ public class UserEvent {
     @ConsumeEvent("save-user")
     public Uni<Response> saveUser (UserDTO userDTO) {
         return sessionFactory.withSession(session -> {
-            return userRepository.count("phoneNumber", userDTO.getPhoneNumber())
-                    .map(count -> {
-                        if (count > 0) {
+//                    userRepository.count("phoneNumber", userDTO.getPhoneNumber())
+//                            .map(count -> {
+//                                if (count > 0) {
+//                                    return Response.errorResponse(
+//                                            RestResponse.StatusCode.CONFLICT,
+//                                            "Record with phone number already exists"
+//                                    );
+//                                }
+//                            });
+            
+        // With the above pattern how to do multiple validations??
+
+                    // Save user
+                    User savedUser = new User();
+                    savedUser.setFirstName(userDTO.getFirstName());
+                    savedUser.setLastName(userDTO.getLastName());
+                    savedUser.setEmail(userDTO.getEmail());
+                    savedUser.setPassword(userDTO.getPassword());
+                    savedUser.setDateOfBirth(userDTO.getDateOfBirth());
+                    savedUser.setPhoneNumber(userDTO.getPhoneNumber());
+
+//                    return session.withTransaction(transaction -> {
+//
+//                    });
+
+                    return session.persist(savedUser)
+                        .onItem().transform(_void -> {
+                            return Response.successResponse(
+                                    RestResponse.StatusCode.OK,
+                                    mapUserDTO(savedUser));
+                        })
+                        .onFailure().recoverWithItem(throwable -> {
                             return Response.errorResponse(
-                                    RestResponse.StatusCode.CONFLICT,
-                                    "Record with phone number already exists"
-                            );
-//                            return Uni.<Response>createFrom().item(response);
-                        }
-
-                        // Save user
-                        User savedUser = new User();
-                        savedUser.setFirstName(userDTO.getFirstName());
-                        savedUser.setLastName(userDTO.getLastName());
-                        savedUser.setEmail(userDTO.getEmail());
-                        savedUser.setPassword(userDTO.getPassword());
-                        savedUser.setDateOfBirth(userDTO.getDateOfBirth());
-                        savedUser.setPhoneNumber(userDTO.getPhoneNumber());
-
-                        return session.persist(savedUser)
-                                .onItem().transform(_void -> {
-                                    return Response.successResponse(
-                                            RestResponse.StatusCode.OK,
-                                            mapUserDTO(savedUser));
-//                                    return Uni.<Response>createFrom().item(response);
-
-                                }).onFailure().recoverWithItem(throwable -> {
-                                    return Response.errorResponse(
-                                            RestResponse.StatusCode.INTERNAL_SERVER_ERROR,
-                                            "Failed to save user (Error in persist of record)"
-                                    );
-//                                    return Uni.<Response>createFrom().item(response);
-                                });
-                    });
-
+                                    RestResponse.StatusCode.INTERNAL_SERVER_ERROR,
+                                    "Failed to save user (Error in persist of record)");
+                        });
+                })
+        .onFailure().recoverWithItem(throwable -> {
+            return Response.errorResponse(
+                    RestResponse.StatusCode.INTERNAL_SERVER_ERROR,
+                    "Failed to save user (Error in retrieval of record)"
+            );
         });
-//        .onFailure().recoverWithUni(throwable -> {
-//            return Response.errorResponse(
-//                    RestResponse.StatusCode.INTERNAL_SERVER_ERROR,
-//                    "Failed to save user (Error in retrieval of record)"
-//            );
-////            return Uni.<Response>createFrom().item(response);
-//        });
     }
 
     @ConsumeEvent("update-user")
